@@ -1,5 +1,6 @@
 """Static checks that need no Home Assistant installation."""
 import json
+import struct
 import unittest
 from pathlib import Path
 
@@ -22,6 +23,17 @@ class IntegrationLayout(unittest.TestCase):
         # "helper" would hide it from Integrations and bury its options in the entity dialog.
         manifest = json.loads((COMPONENT / "manifest.json").read_text())
         self.assertEqual(manifest["integration_type"], "service")
+
+    def test_brand_images_have_the_sizes_home_assistant_expects(self):
+        def size(name):
+            data = (COMPONENT / "brand" / name).read_bytes()
+            self.assertEqual(data[:8], b"\x89PNG\r\n\x1a\n", name)
+            return struct.unpack(">II", data[16:24])
+
+        self.assertEqual(size("icon.png"), (256, 256))
+        self.assertEqual(size("icon@2x.png"), (512, 512))
+        self.assertTrue(128 <= min(size("logo.png")) <= 256)
+        self.assertTrue(256 <= min(size("logo@2x.png")) <= 512)
 
     def test_german_translation_has_the_same_keys(self):
         def keys(tree, prefix=""):

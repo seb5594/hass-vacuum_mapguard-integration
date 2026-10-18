@@ -1,8 +1,12 @@
+<p align="center">
+  <img src="https://raw.githubusercontent.com/seb5594/hass-vacuum_mapguard-integration/main/custom_components/vacuum_mapguard/brand/logo@2x.png" alt="Vacuum MapGuard" width="360">
+</p>
+
 # Vacuum MapGuard
 
 <!-- badges:begin (generated from project metadata) -->
 [![HACS](https://img.shields.io/static/v1?label=HACS&message=Add%20integration&color=41BDF5&style=flat&logo=homeassistantcommunitystore&logoColor=white)](https://my.home-assistant.io/redirect/hacs_repository/?owner=seb5594&repository=hass-vacuum_mapguard-integration&category=integration) ![setup](https://img.shields.io/static/v1?label=setup&message=UI%20config%20flow&color=157F71&style=flat)<br>
-![home assistant](https://img.shields.io/static/v1?label=home%20assistant&message=%E2%89%A5%202026.3.0&color=1877A5&style=flat) [![version](https://img.shields.io/static/v1?label=version&message=1.0.0&color=1877A5&style=flat)](https://github.com/seb5594/hass-vacuum_mapguard-integration/releases) [![released](https://img.shields.io/github/release-date-pre/seb5594/hass-vacuum_mapguard-integration?label=released&style=flat)](https://github.com/seb5594/hass-vacuum_mapguard-integration/releases) [![checks](https://img.shields.io/github/actions/workflow/status/seb5594/hass-vacuum_mapguard-integration/ci.yml?branch=main&label=checks&style=flat)](https://github.com/seb5594/hass-vacuum_mapguard-integration/actions/workflows/ci.yml)<br>
+![home assistant](https://img.shields.io/static/v1?label=home%20assistant&message=%E2%89%A5%202026.3.0&color=1877A5&style=flat) [![version](https://img.shields.io/static/v1?label=version&message=1.1.0&color=1877A5&style=flat)](https://github.com/seb5594/hass-vacuum_mapguard-integration/releases) [![released](https://img.shields.io/github/release-date-pre/seb5594/hass-vacuum_mapguard-integration?label=released&style=flat)](https://github.com/seb5594/hass-vacuum_mapguard-integration/releases) [![checks](https://img.shields.io/github/actions/workflow/status/seb5594/hass-vacuum_mapguard-integration/ci.yml?branch=main&label=checks&style=flat)](https://github.com/seb5594/hass-vacuum_mapguard-integration/actions/workflows/ci.yml)<br>
 [![downloads](https://img.shields.io/github/downloads/seb5594/hass-vacuum_mapguard-integration/total?label=downloads&style=flat)](https://github.com/seb5594/hass-vacuum_mapguard-integration/releases) [![latest release](https://img.shields.io/github/downloads/seb5594/hass-vacuum_mapguard-integration/latest/total?label=latest%20release&style=flat)](https://github.com/seb5594/hass-vacuum_mapguard-integration/releases/latest)<br>
 [![stars](https://img.shields.io/github/stars/seb5594/hass-vacuum_mapguard-integration?label=stars&style=flat)](https://github.com/seb5594/hass-vacuum_mapguard-integration/stargazers) [![issues](https://img.shields.io/github/issues/seb5594/hass-vacuum_mapguard-integration?label=issues&style=flat)](https://github.com/seb5594/hass-vacuum_mapguard-integration/issues) [![updated](https://img.shields.io/github/last-commit/seb5594/hass-vacuum_mapguard-integration?label=updated&style=flat)](https://github.com/seb5594/hass-vacuum_mapguard-integration/commits/main)<br>
 ![tests](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fseb5594%2Fhass-vacuum_mapguard-integration%2Fbadges%2Ftests.json&style=flat) ![HACS zip](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fseb5594%2Fhass-vacuum_mapguard-integration%2Fbadges%2Fzip-size.json&style=flat) ![last build](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fseb5594%2Fhass-vacuum_mapguard-integration%2Fbadges%2Flast-build.json&style=flat)
@@ -32,10 +36,10 @@ dashboards, automations, schedules and voice assistants protect the map without 
 ## Setup
 
 1. **Pick your vacuum.** Only vacuums that support cleaning by area are listed.
-2. **Optional: choose the rooms and their order.** The dropdown lists the rooms your vacuum
-   reports, with the names from the vacuum's own app. Pick the rooms Start should clean in the order
-   you want them cleaned. Rooms you leave out are skipped, handy for a balcony or a garage. If you
-   pick nothing, Start cleans all rooms in the order the vacuum reports them.
+2. **Optional: set the room order.** A list shows the rooms your vacuum reports, with the names
+   from the vacuum's own app, in the order Start would clean them without any setting (ascending
+   by room ID). Drag a room to move it, delete one to skip it (handy for a balcony or a garage) and
+   use **Add** to bring it back. Leave the list untouched and Start cleans all rooms.
 
 You can change the rooms later under **Settings > Devices & services > Vacuum MapGuard >
 Configure**. The change applies right away.
@@ -85,7 +89,9 @@ data:
 - Your room-to-area assignment is copied once when you add the integration. If the vacuum's rooms
   change later, assign them again in the dialog of the new `vacuum.robot`.
 - Don't rename the hidden original. If you did, reload the integration.
-- If a room you picked disappears from the map, Start falls back to cleaning all rooms.
+- Rooms you added to the map after leaving the list untouched are cleaned too. Once you change the
+  list, only the rooms in it are cleaned.
+- If every room you picked disappears from the map, Start falls back to cleaning all rooms.
 
 <!-- support:begin (generated, shared text) -->
 ## Say thanks
