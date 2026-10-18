@@ -211,6 +211,41 @@ async def test_clean_area_keeps_the_picked_order(hass):
     assert source.calls == [("clean", ["3", "1"])]
 
 
+async def _choose_start_areas(hass, entry, areas):
+    """Assign rooms to areas on the proxy, then save the start areas as the options flow does."""
+    er.async_get(hass).async_update_entity_options(
+        "vacuum.robot",
+        "vacuum",
+        {"area_mapping": {"kitchen": ["1"], "hallway": ["2", "3"], "garage": []}},
+    )
+    result = await hass.config_entries.options.async_init(entry.entry_id)
+    assert result["type"] == "form"
+    result = await hass.config_entries.options.async_configure(
+        result["flow_id"], {"start_areas": areas}
+    )
+    assert result["type"] == "create_entry"
+
+
+async def test_start_cleans_the_chosen_areas_in_the_chosen_order(hass):
+    source = await _set_up_source(hass)
+    entry = await _wrap(hass)
+    await _choose_start_areas(hass, entry, ["hallway", "kitchen"])
+
+    await _call(hass, "start")
+
+    assert source.calls == [("clean", ["2", "3", "1"])]
+
+
+async def test_start_cleans_every_room_when_the_chosen_areas_have_none(hass):
+    source = await _set_up_source(hass)
+    entry = await _wrap(hass)
+    await _choose_start_areas(hass, entry, ["garage", "gone"])
+
+    await _call(hass, "start")
+
+    assert source.calls == [("clean", ["1", "2", "3"])]
+
+
 async def test_other_actions_are_passed_through(hass):
     source = await _set_up_source(hass)
     await _wrap(hass)

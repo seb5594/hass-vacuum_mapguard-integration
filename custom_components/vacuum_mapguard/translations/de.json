@@ -31,5 +31,16 @@
     "source_unavailable": {
       "message": "Der geschützte Staubsauger {entity_id} ist nicht verfügbar."
     }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Startreihenfolge",
+        "description": "Optional. Wähle die Bereiche, die beim Start gereinigt werden, und sortiere sie in die gewünschte Reihenfolge. Leer lassen, um alle Räume in der Reihenfolge des Saugers zu reinigen. Es zählen nur Bereiche, denen im Dialog „Bereiche reinigen“ des Saugers Räume zugewiesen sind.",
+        "data": {
+          "start_areas": "Bereiche"
+        }
+      }
+    }
   }
 }

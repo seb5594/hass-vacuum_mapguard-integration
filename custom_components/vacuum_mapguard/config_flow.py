@@ -3,17 +3,20 @@
 from typing import Any
 
 from homeassistant.components.vacuum import VacuumEntityFeature
-from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
+from homeassistant.config_entries import ConfigEntry, ConfigFlow, ConfigFlowResult, OptionsFlow
 from homeassistant.const import CONF_ENTITY_ID
+from homeassistant.core import callback
 from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers.selector import (
+    AreaSelector,
+    AreaSelectorConfig,
     EntityFilterSelectorConfig,
     EntitySelector,
     EntitySelectorConfig,
 )
 import voluptuous as vol
 
-from .const import CONF_ORIGINAL_ENTITY_ID, CONF_SOURCE_ID, DOMAIN
+from .const import CONF_ORIGINAL_ENTITY_ID, CONF_SOURCE_ID, CONF_START_AREAS, DOMAIN
 from .entity_swap import VACUUM_DOMAIN
 
 
@@ -33,6 +36,11 @@ class MapGuardConfigFlow(ConfigFlow, domain=DOMAIN):
     """Pick the vacuum to wrap."""
 
     VERSION = 1
+
+    @staticmethod
+    @callback
+    def async_get_options_flow(config_entry: ConfigEntry) -> OptionsFlow:
+        return MapGuardOptionsFlow()
 
     async def async_step_user(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         errors: dict[str, str] = {}
@@ -63,3 +71,23 @@ class MapGuardConfigFlow(ConfigFlow, domain=DOMAIN):
             }
         )
         return self.async_show_form(step_id="user", data_schema=schema, errors=errors)
+
+
+class MapGuardOptionsFlow(OptionsFlow):
+    """Optionally fix the rooms and the order `vacuum.start` cleans."""
+
+    async def async_step_init(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
+        if user_input is not None:
+            return self.async_create_entry(data=user_input)
+
+        schema = vol.Schema(
+            {
+                vol.Optional(CONF_START_AREAS): AreaSelector(
+                    AreaSelectorConfig(multiple=True, reorder=True)
+                )
+            }
+        )
+        return self.async_show_form(
+            step_id="init",
+            data_schema=self.add_suggested_values_to_schema(schema, self.config_entry.options),
+        )
