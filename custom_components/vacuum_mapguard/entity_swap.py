@@ -15,9 +15,10 @@ so a restart in the middle of a swap simply carries on.
 import asyncio
 import logging
 
+from homeassistant.components.vacuum import DATA_COMPONENT, StateVacuumEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
-from homeassistant.exceptions import ConfigEntryError, ConfigEntryNotReady
+from homeassistant.exceptions import ConfigEntryError, ConfigEntryNotReady, HomeAssistantError
 from homeassistant.helpers import entity_registry as er
 
 from .const import CONF_ORIGINAL_ENTITY_ID, CONF_SOURCE_ID, DOMAIN
@@ -39,6 +40,19 @@ def get_source(hass: HomeAssistant, entry: ConfigEntry) -> er.RegistryEntry:
     if source is None:
         raise ConfigEntryError(translation_domain=DOMAIN, translation_key="source_missing")
     return source
+
+
+@callback
+def get_vacuum_entity(hass: HomeAssistant, entity_id: str) -> StateVacuumEntity:
+    """The loaded entity object of a vacuum, needed for its rooms (segments)."""
+    entity = hass.data[DATA_COMPONENT].get_entity(entity_id)
+    if entity is None:
+        raise HomeAssistantError(
+            translation_domain=DOMAIN,
+            translation_key="source_unavailable",
+            translation_placeholders={"entity_id": entity_id},
+        )
+    return entity
 
 
 async def _async_wait_until_state_gone(hass: HomeAssistant, entity_id: str) -> bool:

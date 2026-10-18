@@ -108,13 +108,19 @@ async def _set_up_source(hass: HomeAssistant, segments=THREE_ROOMS) -> FakeVacuu
     return vacuum
 
 
-async def _wrap(hass: HomeAssistant, entity_id: str = "vacuum.robot") -> ConfigEntry:
+async def _wrap(
+    hass: HomeAssistant, entity_id: str = "vacuum.robot", rooms: list[str] | None = None
+) -> ConfigEntry:
     """Run the config flow for a vacuum and let the swap finish."""
     result = await hass.config_entries.flow.async_init(DOMAIN, context={"source": "user"})
     assert result["type"] == "form"
     result = await hass.config_entries.flow.async_configure(
         result["flow_id"], {"entity_id": entity_id}
     )
+    if result["type"] == "form" and result["step_id"] == "rooms":
+        result = await hass.config_entries.flow.async_configure(
+            result["flow_id"], {"start_rooms": rooms} if rooms else {}
+        )
     assert result["type"] == "create_entry", result
     await hass.async_block_till_done()
     return result["result"]
@@ -212,39 +218,66 @@ async def test_clean_area_keeps_the_picked_order(hass):
     assert source.calls == [("clean", ["3", "1"])]
 
 
-async def _choose_start_areas(hass, entry, areas):
-    """Assign rooms to areas on the proxy, then save the start areas as the options flow does."""
-    er.async_get(hass).async_update_entity_options(
-        "vacuum.robot",
-        "vacuum",
-        {"area_mapping": {"kitchen": ["1"], "hallway": ["2", "3"], "garage": []}},
+async def test_start_cleans_the_chosen_rooms_in_the_chosen_order(hass):
+    source = await _set_up_source(hass)
+    await _wrap(hass, rooms=["3", "1"])
+
+    await _call(hass, "start")
+
+    assert source.calls == [("clean", ["3", "1"])]
+
+
+async def test_config_flow_offers_the_rooms_of_the_vacuum(hass):
+    await _set_up_source(hass)
+
+    result = await hass.config_entries.flow.async_init(DOMAIN, context={"source": "user"})
+    result = await hass.config_entries.flow.async_configure(
+        result["flow_id"], {"entity_id": "vacuum.robot"}
     )
+
+    assert result["step_id"] == "rooms"
+    picker = result["data_schema"].schema["start_rooms"]
+    assert picker.config["options"] == [
+        {"value": "1", "label": "Kitchen"},
+        {"value": "2", "label": "Hallway"},
+        {"value": "3", "label": "Bedroom"},
+    ]
+
+
+async def test_rooms_can_be_changed_later_in_the_options(hass):
+    source = await _set_up_source(hass)
+    entry = await _wrap(hass)
+
     result = await hass.config_entries.options.async_init(entry.entry_id)
     assert result["type"] == "form"
+    assert "start_rooms" in result["data_schema"].schema
     result = await hass.config_entries.options.async_configure(
-        result["flow_id"], {"start_areas": areas}
+        result["flow_id"], {"start_rooms": ["2", "3"]}
     )
     assert result["type"] == "create_entry"
+    await _call(hass, "start")
+
+    assert source.calls == [("clean", ["2", "3"])]
 
 
-async def test_start_cleans_the_chosen_areas_in_the_chosen_order(hass):
+async def test_start_cleans_every_room_when_the_chosen_rooms_are_gone(hass):
     source = await _set_up_source(hass)
-    entry = await _wrap(hass)
-    await _choose_start_areas(hass, entry, ["hallway", "kitchen"])
+    await _wrap(hass, rooms=["3"])
+    source.segments = THREE_ROOMS[:2]  # The room was removed from the map.
 
     await _call(hass, "start")
 
-    assert source.calls == [("clean", ["2", "3", "1"])]
+    assert source.calls == [("clean", ["1", "2"])]
 
 
-async def test_start_cleans_every_room_when_the_chosen_areas_have_none(hass):
-    source = await _set_up_source(hass)
+async def test_options_stop_when_the_vacuum_has_no_rooms(hass):
+    await _set_up_source(hass, [])
     entry = await _wrap(hass)
-    await _choose_start_areas(hass, entry, ["garage", "gone"])
 
-    await _call(hass, "start")
+    result = await hass.config_entries.options.async_init(entry.entry_id)
 
-    assert source.calls == [("clean", ["1", "2", "3"])]
+    assert result["type"] == "abort"
+    assert result["reason"] == "no_rooms"
 
 
 async def test_other_actions_are_passed_through(hass):
