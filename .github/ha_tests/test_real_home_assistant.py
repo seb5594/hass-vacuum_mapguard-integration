@@ -20,6 +20,7 @@ from homeassistant.const import Platform  # noqa: E402
 from homeassistant.core import HomeAssistant  # noqa: E402
 from homeassistant.helpers import entity_registry as er  # noqa: E402
 from homeassistant.helpers.device_registry import DeviceInfo  # noqa: E402
+from homeassistant.setup import async_setup_component  # noqa: E402
 from pytest_homeassistant_custom_component.common import (  # noqa: E402
     MockConfigEntry,
     MockModule,
@@ -266,6 +267,23 @@ async def test_removing_the_entry_gives_the_original_its_id_back(hass):
     restored = registry.async_get("vacuum.robot")
     assert restored.platform == SOURCE_DOMAIN
     assert restored.hidden_by is None
+    assert registry.async_get_entity_id("vacuum", DOMAIN, entry.entry_id) is None
+
+
+async def test_deleting_the_entry_in_the_ui_gives_the_original_its_id_back(hass, hass_client):
+    """The UI removes entries through this REST call."""
+    assert await async_setup_component(hass, "config", {})
+    await _set_up_source(hass)
+    entry = await _wrap(hass)
+
+    client = await hass_client()
+    response = await client.delete(f"/api/config/config_entries/entry/{entry.entry_id}")
+    await hass.async_block_till_done()
+
+    assert response.status == 200
+    assert hass.config_entries.async_get_entry(entry.entry_id) is None
+    registry = er.async_get(hass)
+    assert registry.async_get("vacuum.robot").platform == SOURCE_DOMAIN
     assert registry.async_get_entity_id("vacuum", DOMAIN, entry.entry_id) is None
 
 
