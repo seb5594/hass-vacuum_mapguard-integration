@@ -1,0 +1,35 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Vacuum MapGuard",
+        "description": "Pick the vacuum to protect. It gets hidden and renamed (for example vacuum.robot becomes vacuum.robot_roborock), and Vacuum MapGuard takes over its entity ID. Dashboards, automations and voice assistants keep working. Removing the entry undoes this.",
+        "data": {
+          "entity_id": "Vacuum"
+        },
+        "data_description": {
+          "entity_id": "Only vacuums that support cleaning by area are listed."
+        }
+      }
+    },
+    "error": {
+      "no_unique_id": "This vacuum has no unique ID, so Home Assistant can't rename it.",
+      "already_wrapped": "This is already a Vacuum MapGuard vacuum.",
+      "no_clean_area": "This vacuum doesn't support cleaning by area."
+    },
+    "abort": {
+      "already_configured": "This vacuum is already protected."
+    }
+  },
+  "exceptions": {
+    "source_missing": {
+      "message": "The protected vacuum was removed from the entity registry. Delete this entry and add it again."
+    },
+    "original_id_busy": {
+      "message": "{entity_id} is still in use, trying again shortly."
+    },
+    "source_unavailable": {
+      "message": "The protected vacuum {entity_id} is not available."
+    }
+  }
+}

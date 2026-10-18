@@ -18,6 +18,16 @@ class IntegrationLayout(unittest.TestCase):
         english = json.loads((COMPONENT / "translations/en.json").read_text())
         self.assertEqual(strings, english)
 
+    def test_german_translation_has_the_same_keys(self):
+        def keys(tree, prefix=""):
+            return {f"{prefix}/{k}" for k, v in tree.items()} | {
+                key for k, v in tree.items() if isinstance(v, dict) for key in keys(v, f"{prefix}/{k}")
+            }
+
+        english = json.loads((COMPONENT / "translations/en.json").read_text())
+        german = json.loads((COMPONENT / "translations/de.json").read_text())
+        self.assertEqual(keys(german), keys(english))
+
 
 if __name__ == "__main__":
     unittest.main()

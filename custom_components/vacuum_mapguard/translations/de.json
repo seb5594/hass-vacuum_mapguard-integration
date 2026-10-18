@@ -1,0 +1,35 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Vacuum MapGuard",
+        "description": "Wähle den Staubsauger, der geschützt werden soll. Er wird ausgeblendet und umbenannt (zum Beispiel wird aus vacuum.robot dann vacuum.robot_roborock), und Vacuum MapGuard übernimmt seine Entitäts-ID. Dashboards, Automatisierungen und Sprachassistenten funktionieren unverändert weiter. Beim Entfernen des Eintrags wird alles zurückgesetzt.",
+        "data": {
+          "entity_id": "Staubsauger"
+        },
+        "data_description": {
+          "entity_id": "Es werden nur Staubsauger angezeigt, die das Reinigen einzelner Bereiche unterstützen."
+        }
+      }
+    },
+    "error": {
+      "no_unique_id": "Dieser Staubsauger hat keine eindeutige ID, daher kann Home Assistant ihn nicht umbenennen.",
+      "already_wrapped": "Das ist bereits ein Vacuum-MapGuard-Staubsauger.",
+      "no_clean_area": "Dieser Staubsauger unterstützt das Reinigen einzelner Bereiche nicht."
+    },
+    "abort": {
+      "already_configured": "Dieser Staubsauger ist bereits geschützt."
+    }
+  },
+  "exceptions": {
+    "source_missing": {
+      "message": "Der geschützte Staubsauger wurde aus der Entitätsregistrierung entfernt. Lösche diesen Eintrag und füge ihn neu hinzu."
+    },
+    "original_id_busy": {
+      "message": "{entity_id} wird noch verwendet, der nächste Versuch folgt in Kürze."
+    },
+    "source_unavailable": {
+      "message": "Der geschützte Staubsauger {entity_id} ist nicht verfügbar."
+    }
+  }
+}
