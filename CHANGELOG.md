@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.1
+
+- The room list shows the room names instead of their IDs and no longer has an edit button. Rooms can still be dragged into order and removed.
+
 ## 1.1.0
 
 - The room order is a sortable list again. It shows the rooms the vacuum reports, in the order Start cleans them without a custom order (ascending by room ID), so you only drag, delete or add rooms.

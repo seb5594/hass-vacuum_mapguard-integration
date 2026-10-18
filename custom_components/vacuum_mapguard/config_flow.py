@@ -12,8 +12,6 @@ from homeassistant.helpers.selector import (
     EntityFilterSelectorConfig,
     EntitySelector,
     EntitySelectorConfig,
-    ObjectSelector,
-    ObjectSelectorConfig,
     SelectOptionDict,
     SelectSelector,
     SelectSelectorConfig,
@@ -23,8 +21,6 @@ import voluptuous as vol
 
 from .const import CONF_ORIGINAL_ENTITY_ID, CONF_SOURCE_ID, CONF_START_ROOMS, DOMAIN
 from .entity_swap import VACUUM_DOMAIN, get_source, get_vacuum_entity, sorted_by_id
-
-_ROOM_FIELD = "room"
 
 
 def _find_problem(source: er.RegistryEntry | None) -> str | None:
@@ -47,42 +43,38 @@ async def _async_get_rooms(hass: HomeAssistant, entity_id: str) -> list[Segment]
         return []
 
 
+class _SortableSelect(SelectSelector):
+    """A select whose chips the user can drag into order.
+
+    Home Assistant's frontend can reorder the chips of a multiple select, but the
+    backend schema doesn't list that option yet, so it is added after validation.
+    Frontends without the feature show the chips in the order they were picked.
+    """
+
+    def __init__(self, config: SelectSelectorConfig) -> None:
+        super().__init__(config)
+        self.config["reorder"] = True
+
+
 def _rooms_schema(rooms: list[Segment], chosen: list[str]) -> vol.Schema:
-    """A sortable list of rooms, filled with the order Start would clean them in right now."""
-    picker = SelectSelector(
+    """A sortable list of room names, filled with the order Start would clean them in now."""
+    picker = _SortableSelect(
         SelectSelectorConfig(
             options=[SelectOptionDict(value=room.id, label=room.name) for room in rooms],
+            multiple=True,
             mode=SelectSelectorMode.DROPDOWN,
         )
     )
     suggestion = chosen or [room.id for room in rooms]
     return vol.Schema(
-        {
-            vol.Optional(
-                CONF_START_ROOMS,
-                description={"suggested_value": [{_ROOM_FIELD: room} for room in suggestion]},
-            ): ObjectSelector(
-                ObjectSelectorConfig(
-                    fields={
-                        _ROOM_FIELD: {
-                            # The dict form, older releases only validate nested selectors that way.
-                            "selector": picker.serialize()["selector"],
-                            "required": True,
-                            "label": "Room",
-                        }
-                    },
-                    multiple=True,
-                    label_field=_ROOM_FIELD,
-                )
-            )
-        }
+        {vol.Optional(CONF_START_ROOMS, description={"suggested_value": suggestion}): picker}
     )
 
 
 def _chosen_rooms(user_input: dict[str, Any], rooms: list[Segment]) -> dict[str, list[str]]:
     """The options to store. The untouched default list is stored as nothing, so rooms
     added to the map later are still cleaned."""
-    chosen = list(dict.fromkeys(item[_ROOM_FIELD] for item in user_input.get(CONF_START_ROOMS, [])))
+    chosen = list(dict.fromkeys(user_input.get(CONF_START_ROOMS, [])))
     if chosen == [room.id for room in rooms]:
         return {}
     return {CONF_START_ROOMS: chosen} if chosen else {}

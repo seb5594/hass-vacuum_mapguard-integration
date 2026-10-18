@@ -13,7 +13,7 @@
       },
       "rooms": {
         "title": "Start order",
-        "description": "Optional. This is the order Start cleans your rooms in, as the vacuum would clean them without a custom order. Drag a room to move it, delete one to skip it, and use Add to bring one back. Leave the list as it is to clean all rooms. You can change this later under Configure.",
+        "description": "Optional. This is the order Start cleans your rooms in, as the vacuum would clean them without a custom order. Drag a room to move it, remove one to skip it and pick it from the list again to bring it back. Leave the list as it is to clean all rooms. You can change this later under Configure.",
         "data": {
           "start_rooms": "Rooms"
         }
@@ -43,7 +43,7 @@
     "step": {
       "init": {
         "title": "Start order",
-        "description": "Optional. This is the order Start cleans your rooms in. Drag a room to move it, delete one to skip it, and use Add to bring one back. Leave the list as it is to clean all rooms.",
+        "description": "Optional. This is the order Start cleans your rooms in. Drag a room to move it, remove one to skip it and pick it from the list again to bring it back. Leave the list as it is to clean all rooms.",
         "data": {
           "start_rooms": "Rooms"
         }

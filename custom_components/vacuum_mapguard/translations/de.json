@@ -13,7 +13,7 @@
       },
       "rooms": {
         "title": "Startreihenfolge",
-        "description": "Optional. Das ist die Reihenfolge, in der Start deine Räume reinigt, so wie der Sauger sie ohne eigene Reihenfolge reinigen würde. Ziehe einen Raum, um ihn zu verschieben, lösche einen, um ihn zu überspringen, und hole ihn mit Hinzufügen zurück. Lässt du die Liste unverändert, werden alle Räume gereinigt. Du kannst das später unter Konfigurieren ändern.",
+        "description": "Optional. Das ist die Reihenfolge, in der Start deine Räume reinigt, so wie der Sauger sie ohne eigene Reihenfolge reinigen würde. Ziehe einen Raum, um ihn zu verschieben, entferne einen, um ihn zu überspringen, und wähle ihn aus der Liste erneut aus, um ihn zurückzuholen. Lässt du die Liste unverändert, werden alle Räume gereinigt. Du kannst das später unter Konfigurieren ändern.",
         "data": {
           "start_rooms": "Räume"
         }
@@ -43,7 +43,7 @@
     "step": {
       "init": {
         "title": "Startreihenfolge",
-        "description": "Optional. Das ist die Reihenfolge, in der Start deine Räume reinigt. Ziehe einen Raum, um ihn zu verschieben, lösche einen, um ihn zu überspringen, und hole ihn mit Hinzufügen zurück. Lässt du die Liste unverändert, werden alle Räume gereinigt.",
+        "description": "Optional. Das ist die Reihenfolge, in der Start deine Räume reinigt. Ziehe einen Raum, um ihn zu verschieben, entferne einen, um ihn zu überspringen, und wähle ihn aus der Liste erneut aus, um ihn zurückzuholen. Lässt du die Liste unverändert, werden alle Räume gereinigt.",
         "data": {
           "start_rooms": "Räume"
         }
