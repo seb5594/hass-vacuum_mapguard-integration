@@ -108,11 +108,6 @@ async def _set_up_source(hass: HomeAssistant, segments=THREE_ROOMS) -> FakeVacuu
     return vacuum
 
 
-def _room_list(room_ids: list[str]) -> list[dict[str, str]]:
-    """How the sortable room list of the form is submitted."""
-    return [{"room": room_id} for room_id in room_ids]
-
-
 async def _wrap(
     hass: HomeAssistant, entity_id: str = "vacuum.robot", rooms: list[str] | None = None
 ) -> ConfigEntry:
@@ -124,7 +119,7 @@ async def _wrap(
     )
     if result["type"] == "form" and result["step_id"] == "rooms":
         result = await hass.config_entries.flow.async_configure(
-            result["flow_id"], {"start_rooms": _room_list(rooms)} if rooms else {}
+            result["flow_id"], {"start_rooms": rooms} if rooms else {}
         )
     assert result["type"] == "create_entry", result
     await hass.async_block_till_done()
@@ -237,7 +232,7 @@ SCATTERED_ROOMS = [Segment("10", "Garage"), Segment("3", "Bedroom"), Segment("1"
 
 def _suggested_rooms(form: dict) -> list[str]:
     marker = next(key for key in form["data_schema"].schema if key == "start_rooms")
-    return [item["room"] for item in marker.description["suggested_value"]]
+    return marker.description["suggested_value"]
 
 
 async def test_config_flow_lists_the_rooms_of_the_vacuum_by_id(hass):
@@ -250,12 +245,6 @@ async def test_config_flow_lists_the_rooms_of_the_vacuum_by_id(hass):
 
     assert result["step_id"] == "rooms"
     assert _suggested_rooms(result) == ["1", "3", "10"]
-    picker = result["data_schema"].schema["start_rooms"]
-    assert picker.config["fields"]["room"]["selector"]["select"]["options"] == [
-        {"value": "1", "label": "Kitchen"},
-        {"value": "3", "label": "Bedroom"},
-        {"value": "10", "label": "Garage"},
-    ]
 
 
 async def test_the_rooms_form_reaches_the_frontend_as_a_sortable_list(hass, hass_client):
@@ -275,14 +264,14 @@ async def test_the_rooms_form_reaches_the_frontend_as_a_sortable_list(hass, hass
 
     assert form["step_id"] == "rooms"
     (field,) = form["data_schema"]
-    selector = field["selector"]["object"]
-    assert selector["multiple"] is True and selector["label_field"] == "room"
-    assert [o["label"] for o in selector["fields"]["room"]["selector"]["select"]["options"]] == [
-        "Kitchen",
-        "Bedroom",
-        "Garage",
+    select = field["selector"]["select"]
+    assert select["multiple"] is True and select["reorder"] is True
+    assert select["options"] == [
+        {"value": "1", "label": "Kitchen"},
+        {"value": "3", "label": "Bedroom"},
+        {"value": "10", "label": "Garage"},
     ]
-    assert field["description"]["suggested_value"] == _room_list(["1", "3", "10"])
+    assert field["description"]["suggested_value"] == ["1", "3", "10"]
 
 
 async def test_start_without_a_chosen_order_cleans_the_rooms_by_id(hass):
@@ -302,7 +291,7 @@ async def test_the_untouched_default_list_is_not_stored(hass):
     )
 
     result = await hass.config_entries.flow.async_configure(
-        result["flow_id"], {"start_rooms": _room_list(_suggested_rooms(result))}
+        result["flow_id"], {"start_rooms": _suggested_rooms(result)}
     )
     await hass.async_block_till_done()
 
@@ -320,7 +309,7 @@ async def test_rooms_can_be_changed_later_in_the_options(hass):
     assert result["type"] == "form"
     assert _suggested_rooms(result) == ["1", "2", "3"]
     result = await hass.config_entries.options.async_configure(
-        result["flow_id"], {"start_rooms": _room_list(["2", "3"])}
+        result["flow_id"], {"start_rooms": ["2", "3"]}
     )
     assert result["type"] == "create_entry"
     await _call(hass, "start")
