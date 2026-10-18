@@ -1,16 +1,30 @@
+<!-- header:begin (generated from project metadata) -->
+<h1 align="center">Vacuum MapGuard</h1>
+
 <p align="center">
-  <img src="https://raw.githubusercontent.com/seb5594/hass-vacuum_mapguard-integration/main/custom_components/vacuum_mapguard/brand/logo@2x.png" alt="Vacuum MapGuard" width="360">
+  <img src="https://raw.githubusercontent.com/seb5594/hass-vacuum_mapguard-integration/main/custom_components/vacuum_mapguard/brand/logo@2x.png" alt="Vacuum MapGuard" width="246" height="160">
 </p>
 
-# Vacuum MapGuard
+---
 
-<!-- badges:begin (generated from project metadata) -->
-[![HACS](https://img.shields.io/static/v1?label=HACS&message=Add%20integration&color=41BDF5&style=flat&logo=homeassistantcommunitystore&logoColor=white)](https://my.home-assistant.io/redirect/hacs_repository/?owner=seb5594&repository=hass-vacuum_mapguard-integration&category=integration) ![setup](https://img.shields.io/static/v1?label=setup&message=UI%20config%20flow&color=157F71&style=flat)<br>
-![home assistant](https://img.shields.io/static/v1?label=home%20assistant&message=%E2%89%A5%202026.3.0&color=1877A5&style=flat) [![version](https://img.shields.io/static/v1?label=version&message=1.1.1&color=1877A5&style=flat)](https://github.com/seb5594/hass-vacuum_mapguard-integration/releases) [![released](https://img.shields.io/github/release-date-pre/seb5594/hass-vacuum_mapguard-integration?label=released&style=flat)](https://github.com/seb5594/hass-vacuum_mapguard-integration/releases) [![checks](https://img.shields.io/github/actions/workflow/status/seb5594/hass-vacuum_mapguard-integration/ci.yml?branch=main&label=checks&style=flat)](https://github.com/seb5594/hass-vacuum_mapguard-integration/actions/workflows/ci.yml)<br>
-[![downloads](https://img.shields.io/github/downloads/seb5594/hass-vacuum_mapguard-integration/total?label=downloads&style=flat)](https://github.com/seb5594/hass-vacuum_mapguard-integration/releases) [![latest release](https://img.shields.io/github/downloads/seb5594/hass-vacuum_mapguard-integration/latest/total?label=latest%20release&style=flat)](https://github.com/seb5594/hass-vacuum_mapguard-integration/releases/latest)<br>
-[![stars](https://img.shields.io/github/stars/seb5594/hass-vacuum_mapguard-integration?label=stars&style=flat)](https://github.com/seb5594/hass-vacuum_mapguard-integration/stargazers) [![issues](https://img.shields.io/github/issues/seb5594/hass-vacuum_mapguard-integration?label=issues&style=flat)](https://github.com/seb5594/hass-vacuum_mapguard-integration/issues) [![updated](https://img.shields.io/github/last-commit/seb5594/hass-vacuum_mapguard-integration?label=updated&style=flat)](https://github.com/seb5594/hass-vacuum_mapguard-integration/commits/main)<br>
-![tests](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fseb5594%2Fhass-vacuum_mapguard-integration%2Fbadges%2Ftests.json&style=flat) ![HACS zip](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fseb5594%2Fhass-vacuum_mapguard-integration%2Fbadges%2Fzip-size.json&style=flat) ![last build](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fseb5594%2Fhass-vacuum_mapguard-integration%2Fbadges%2Flast-build.json&style=flat)
-<!-- badges:end -->
+<p align="center">
+  <a href="https://paypal.me/seb5594"><img src="https://img.shields.io/static/v1?label=Support&amp;message=PayPal&amp;color=0070BA&amp;logo=paypal&amp;logoColor=white&amp;style=for-the-badge" alt="PayPal" height="40"></a>
+  <a href="https://buymeacoffee.com/seb5594"><img src="https://img.shields.io/static/v1?label=Support&amp;message=Buy%20Me%20a%20Coffee&amp;color=FFDD00&amp;logo=buy-me-a-coffee&amp;logoColor=black&amp;style=for-the-badge" alt="Buy Me a Coffee" height="40"></a>
+</p>
+
+<p align="center">
+  <a href="https://my.home-assistant.io/redirect/hacs_repository/?owner=seb5594&amp;repository=hass-vacuum_mapguard-integration&amp;category=integration"><img src="https://img.shields.io/static/v1?label=HACS&amp;message=Add%20integration&amp;color=41BDF5&amp;logo=homeassistantcommunitystore&amp;logoColor=white&amp;style=for-the-badge" alt="HACS" height="28"></a>
+  <a href="https://github.com/seb5594/hass-vacuum_mapguard-integration/actions/workflows/compat.yml"><img src="https://img.shields.io/static/v1?label=home%20assistant&amp;message=%E2%89%A5%202026.3.0&amp;color=1877A5&amp;style=for-the-badge" alt="home assistant" height="28"></a>
+  <a href="https://github.com/seb5594/hass-vacuum_mapguard-integration/releases/tag/v1.1.1"><img src="https://img.shields.io/static/v1?label=version&amp;message=1.1.1&amp;color=1877A5&amp;style=for-the-badge" alt="version" height="28"></a>
+  <a href="https://github.com/seb5594/hass-vacuum_mapguard-integration/releases"><img src="https://img.shields.io/github/downloads/seb5594/hass-vacuum_mapguard-integration/v1.1.1/total?label=downloads&amp;color=1877A5&amp;style=for-the-badge" alt="downloads" height="28"></a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/seb5594/hass-vacuum_mapguard-integration/issues"><img src="https://img.shields.io/github/issues/seb5594/hass-vacuum_mapguard-integration?label=issues&amp;style=flat" alt="issues" height="20"></a>
+  <a href="https://github.com/seb5594/hass-vacuum_mapguard-integration/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/seb5594/hass-vacuum_mapguard-integration/ci.yml?branch=main&amp;label=checks&amp;style=flat" alt="checks" height="20"></a>
+  <a href="https://github.com/seb5594/hass-vacuum_mapguard-integration#license"><img src="https://img.shields.io/github/license/seb5594/hass-vacuum_mapguard-integration?label=license&amp;style=flat" alt="license" height="20"></a>
+</p>
+<!-- header:end -->
 
 Makes `vacuum.start` clean your rooms one by one instead of running the vendor's "full clean", so
 your saved floor plan stays untouched.
@@ -101,5 +115,13 @@ All my projects are built in my spare time, just for the fun of it. Still, they 
 
 If my work helped you or turned out to be useful, show your appreciation with a hot drink for my next sleepless night.
 
-[![Buy Me a Coffee](https://img.shields.io/static/v1?label=Support&message=Buy%20Me%20a%20Coffee&color=FFDD00&logo=buy-me-a-coffee&logoColor=black&style=for-the-badge)](https://buymeacoffee.com/seb5594) [![PayPal](https://img.shields.io/static/v1?label=Support&message=PayPal&color=0070BA&logo=paypal&logoColor=white&style=for-the-badge)](https://www.paypal.com/donate/?hosted_button_id=QMQPNRENXDN26)
+[![PayPal](https://img.shields.io/static/v1?label=Support&message=PayPal&color=0070BA&logo=paypal&logoColor=white&style=for-the-badge)](https://paypal.me/seb5594) [![Buy Me a Coffee](https://img.shields.io/static/v1?label=Support&message=Buy%20Me%20a%20Coffee&color=FFDD00&logo=buy-me-a-coffee&logoColor=black&style=for-the-badge)](https://buymeacoffee.com/seb5594)
 <!-- support:end -->
+
+<!-- license:begin (generated from the license file) -->
+## License
+
+[![license](https://img.shields.io/static/v1?label=license&message=Apache-2.0&color=5B6770&style=flat)](LICENSE)
+
+Published under the [Apache License 2.0](LICENSE).
+<!-- license:end -->
