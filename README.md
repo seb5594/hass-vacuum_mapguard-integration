@@ -41,7 +41,8 @@ yours:
 
 The new `vacuum.robot` mirrors the original's state, fan speed and attributes and passes every
 action through. Only `vacuum.start` is different: if the vacuum is docked, idle, returning or in an
-error state, it cleans all rooms one after another. A paused vacuum is resumed as usual.
+error state, it cleans room by room (see [Choosing the room order](#choosing-the-room-order)). A
+paused vacuum is resumed as usual.
 
 If the vacuum reports no rooms yet (a new robot that has not mapped anything), or rooms of several
 maps (a multi-floor setup), Vacuum MapGuard cannot plan a room-by-room run. It logs a warning and
@@ -52,12 +53,11 @@ its entity ID back.
 
 ## Choosing the room order
 
-Use Home Assistant's own **Clean areas** dialog on the vacuum, the one with a tile per area:
+Rooms are handled through Home Assistant's own **Clean areas** dialog of the vacuum. Use its
+cogwheel once to assign the vacuum's rooms to your areas. Only assigned areas get a tile.
 
-1. Use the cogwheel once to assign your vacuum's rooms to your areas. Only assigned areas get a tile.
-2. Tap the tiles in the order you want them cleaned, then start the cleaning.
-
-The rooms reach your vacuum in the order you tapped them. The same works from a script or automation,
+**For a single run:** tap the tiles in the order you want them cleaned, then start the cleaning. The
+rooms reach your vacuum in the order you tapped them. The same works from a script or automation,
 where the area picker can be reordered:
 
 ```yaml
@@ -71,8 +71,14 @@ data:
     - bedroom
 ```
 
-Whether the vacuum really follows that order is up to its firmware, Home Assistant points that out
-in the dialog as well. `vacuum.start` cleans the rooms in the order the vacuum reports them.
+**For `vacuum.start`:** open the integration under **Settings > Devices & services**, press
+**Configure** and choose the areas Start should clean, dragged into the order you want. It is
+optional. Left empty, Start cleans all rooms in the order the vacuum reports them. Areas without
+assigned rooms are skipped, and if none of the chosen areas has rooms, Start cleans all rooms.
+Leaving an area out of the list also keeps its rooms out of Start, handy for a balcony or garage.
+
+Whether the vacuum really follows the order is up to its firmware. Home Assistant points that out in
+the dialog as well.
 
 ## Good to know
 

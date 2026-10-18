@@ -31,5 +31,16 @@
     "source_unavailable": {
       "message": "The protected vacuum {entity_id} is not available."
     }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Start order",
+        "description": "Optional. Choose the areas that Start cleans and drag them into the order you want. Leave it empty to clean all rooms in the order the vacuum reports them. Only areas that have rooms assigned in the vacuum's Clean areas dialog count.",
+        "data": {
+          "start_areas": "Areas"
+        }
+      }
+    }
   }
 }
