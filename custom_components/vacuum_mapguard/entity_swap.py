@@ -13,9 +13,10 @@ so a restart in the middle of a swap simply carries on.
 """
 
 import asyncio
+from collections.abc import Iterable
 import logging
 
-from homeassistant.components.vacuum import DATA_COMPONENT, StateVacuumEntity
+from homeassistant.components.vacuum import DATA_COMPONENT, Segment, StateVacuumEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.exceptions import ConfigEntryError, ConfigEntryNotReady, HomeAssistantError
@@ -40,6 +41,11 @@ def get_source(hass: HomeAssistant, entry: ConfigEntry) -> er.RegistryEntry:
     if source is None:
         raise ConfigEntryError(translation_domain=DOMAIN, translation_key="source_missing")
     return source
+
+
+def sorted_by_id(segments: Iterable[Segment]) -> list[Segment]:
+    """Rooms in ascending ID order, numbers by value (so 2 comes before 10)."""
+    return sorted(segments, key=lambda s: (0, int(s.id), s.id) if s.id.isdigit() else (1, 0, s.id))
 
 
 @callback

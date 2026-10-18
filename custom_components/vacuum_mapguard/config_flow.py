@@ -2,7 +2,7 @@
 
 from typing import Any
 
-from homeassistant.components.vacuum import VacuumEntityFeature
+from homeassistant.components.vacuum import Segment, VacuumEntityFeature
 from homeassistant.config_entries import ConfigEntry, ConfigFlow, ConfigFlowResult, OptionsFlow
 from homeassistant.const import CONF_ENTITY_ID
 from homeassistant.core import HomeAssistant, callback
@@ -12,6 +12,8 @@ from homeassistant.helpers.selector import (
     EntityFilterSelectorConfig,
     EntitySelector,
     EntitySelectorConfig,
+    ObjectSelector,
+    ObjectSelectorConfig,
     SelectOptionDict,
     SelectSelector,
     SelectSelectorConfig,
@@ -20,7 +22,9 @@ from homeassistant.helpers.selector import (
 import voluptuous as vol
 
 from .const import CONF_ORIGINAL_ENTITY_ID, CONF_SOURCE_ID, CONF_START_ROOMS, DOMAIN
-from .entity_swap import VACUUM_DOMAIN, get_source, get_vacuum_entity
+from .entity_swap import VACUUM_DOMAIN, get_source, get_vacuum_entity, sorted_by_id
+
+_ROOM_FIELD = "room"
 
 
 def _find_problem(source: er.RegistryEntry | None) -> str | None:
@@ -35,28 +39,53 @@ def _find_problem(source: er.RegistryEntry | None) -> str | None:
     return None
 
 
-async def _async_rooms_schema(hass: HomeAssistant, entity_id: str) -> vol.Schema | None:
-    """Optional room picker with the rooms the vacuum itself reports, None without rooms.
-
-    The dropdown lists the rooms in the order they get picked, so that is the order
-    `vacuum.start` cleans them in.
-    """
+async def _async_get_rooms(hass: HomeAssistant, entity_id: str) -> list[Segment]:
+    """The rooms the vacuum reports, in the order Start cleans them without a custom order."""
     try:
-        segments = await get_vacuum_entity(hass, entity_id).async_get_segments()
+        return sorted_by_id(await get_vacuum_entity(hass, entity_id).async_get_segments())
     except HomeAssistantError:
-        return None
-    if not segments:
-        return None
-    options = [SelectOptionDict(value=segment.id, label=segment.name) for segment in segments]
+        return []
+
+
+def _rooms_schema(rooms: list[Segment], chosen: list[str]) -> vol.Schema:
+    """A sortable list of rooms, filled with the order Start would clean them in right now."""
+    picker = SelectSelector(
+        SelectSelectorConfig(
+            options=[SelectOptionDict(value=room.id, label=room.name) for room in rooms],
+            mode=SelectSelectorMode.DROPDOWN,
+        )
+    )
+    suggestion = chosen or [room.id for room in rooms]
     return vol.Schema(
         {
-            vol.Optional(CONF_START_ROOMS): SelectSelector(
-                SelectSelectorConfig(
-                    options=options, multiple=True, mode=SelectSelectorMode.DROPDOWN
+            vol.Optional(
+                CONF_START_ROOMS,
+                description={"suggested_value": [{_ROOM_FIELD: room} for room in suggestion]},
+            ): ObjectSelector(
+                ObjectSelectorConfig(
+                    fields={
+                        _ROOM_FIELD: {
+                            # The dict form, older releases only validate nested selectors that way.
+                            "selector": picker.serialize()["selector"],
+                            "required": True,
+                            "label": "Room",
+                        }
+                    },
+                    multiple=True,
+                    label_field=_ROOM_FIELD,
                 )
             )
         }
     )
+
+
+def _chosen_rooms(user_input: dict[str, Any], rooms: list[Segment]) -> dict[str, list[str]]:
+    """The options to store. The untouched default list is stored as nothing, so rooms
+    added to the map later are still cleaned."""
+    chosen = list(dict.fromkeys(item[_ROOM_FIELD] for item in user_input.get(CONF_START_ROOMS, [])))
+    if chosen == [room.id for room in rooms]:
+        return {}
+    return {CONF_START_ROOMS: chosen} if chosen else {}
 
 
 class MapGuardConfigFlow(ConfigFlow, domain=DOMAIN):
@@ -101,16 +130,15 @@ class MapGuardConfigFlow(ConfigFlow, domain=DOMAIN):
     async def async_step_rooms(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         source = self._source
         assert source is not None
-        if user_input is None and (
-            schema := await _async_rooms_schema(self.hass, source.entity_id)
-        ):
-            return self.async_show_form(step_id="rooms", data_schema=schema)
+        rooms = await _async_get_rooms(self.hass, source.entity_id)
+        if user_input is None and rooms:
+            return self.async_show_form(step_id="rooms", data_schema=_rooms_schema(rooms, []))
 
         state = self.hass.states.get(source.entity_id)
         return self.async_create_entry(
             title=state.name if state else source.entity_id,
             data={CONF_SOURCE_ID: source.id, CONF_ORIGINAL_ENTITY_ID: source.entity_id},
-            options=user_input or {},
+            options=_chosen_rooms(user_input or {}, rooms),
         )
 
 
@@ -118,17 +146,15 @@ class MapGuardOptionsFlow(OptionsFlow):
     """Change the rooms and the order `vacuum.start` cleans."""
 
     async def async_step_init(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
-        if user_input is not None:
-            return self.async_create_entry(data=user_input)
-
         try:
             entity_id = get_source(self.hass, self.config_entry).entity_id
         except HomeAssistantError:
             return self.async_abort(reason="no_rooms")
-        schema = await _async_rooms_schema(self.hass, entity_id)
-        if schema is None:
+        rooms = await _async_get_rooms(self.hass, entity_id)
+        if not rooms:
             return self.async_abort(reason="no_rooms")
-        return self.async_show_form(
-            step_id="init",
-            data_schema=self.add_suggested_values_to_schema(schema, self.config_entry.options),
-        )
+        if user_input is not None:
+            return self.async_create_entry(data=_chosen_rooms(user_input, rooms))
+
+        chosen = self.config_entry.options.get(CONF_START_ROOMS, [])
+        return self.async_show_form(step_id="init", data_schema=_rooms_schema(rooms, chosen))

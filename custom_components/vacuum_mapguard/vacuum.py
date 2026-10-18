@@ -17,7 +17,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.event import async_track_state_change_event
 
 from .const import CONF_START_ROOMS
-from .entity_swap import VACUUM_DOMAIN, get_source, get_vacuum_entity
+from .entity_swap import VACUUM_DOMAIN, get_source, get_vacuum_entity, sorted_by_id
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -149,18 +149,17 @@ class MapGuardVacuum(StateVacuumEntity):
         await self._forward("start")
 
     async def _async_start_segment_ids(self) -> list[str]:
-        """The rooms chosen in the options, in that order, or else all rooms."""
+        """The rooms chosen in the options, in that order, or else all rooms by ID."""
         segments = await self.async_get_segments()
         known = {segment.id for segment in segments}
-        if chosen := [
-            room for room in self._entry.options.get(CONF_START_ROOMS, []) if room in known
-        ]:
-            return chosen
+        chosen = dict.fromkeys(self._entry.options.get(CONF_START_ROOMS, []))
+        if rooms := [room for room in chosen if room in known]:
+            return rooms
         # Rooms of several maps (floors) can't be told apart from here, and
         # without rooms there's no saved map yet that needs protecting.
         if len({segment.group for segment in segments}) != 1:
             return []
-        return [segment.id for segment in segments]
+        return [segment.id for segment in sorted_by_id(segments)]
 
     # Home Assistant's own "Clean areas" dialog and `vacuum.clean_area` run on these two.
     # The rooms reach the original in the order they were picked.

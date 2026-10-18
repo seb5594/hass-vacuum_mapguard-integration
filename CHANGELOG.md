@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.0
+
+- The room order is a sortable list again. It shows the rooms the vacuum reports, in the order Start cleans them without a custom order (ascending by room ID), so you only drag, delete or add rooms.
+- Without a custom order, Start cleans the rooms by ascending room ID.
+- Added the Vacuum MapGuard icon and logo.
+
 ## 1.0.0
 
 - First stable release. Requires Home Assistant 2026.3 or newer.
