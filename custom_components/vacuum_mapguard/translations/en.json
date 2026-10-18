@@ -10,6 +10,13 @@
         "data_description": {
           "entity_id": "Only vacuums that support cleaning by area are listed."
         }
+      },
+      "rooms": {
+        "title": "Start order",
+        "description": "Optional. Pick the rooms Start should clean, in the order you want them cleaned. Rooms you leave out are skipped. Leave it empty to clean all rooms in the order the vacuum reports them. You can change this later under Configure.",
+        "data": {
+          "start_rooms": "Rooms"
+        }
       }
     },
     "error": {
@@ -36,11 +43,14 @@
     "step": {
       "init": {
         "title": "Start order",
-        "description": "Optional. Choose the areas that Start cleans and drag them into the order you want. Leave it empty to clean all rooms in the order the vacuum reports them. Only areas that have rooms assigned in the vacuum's Clean areas dialog count.",
+        "description": "Optional. Pick the rooms Start should clean, in the order you want them cleaned. Rooms you leave out are skipped. Leave it empty to clean all rooms in the order the vacuum reports them.",
         "data": {
-          "start_areas": "Areas"
+          "start_rooms": "Rooms"
         }
       }
+    },
+    "abort": {
+      "no_rooms": "The vacuum doesn't report any rooms right now."
     }
   }
 }

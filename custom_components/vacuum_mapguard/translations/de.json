@@ -10,6 +10,13 @@
         "data_description": {
           "entity_id": "Es werden nur Staubsauger angezeigt, die das Reinigen einzelner Bereiche unterstützen."
         }
+      },
+      "rooms": {
+        "title": "Startreihenfolge",
+        "description": "Optional. Wähle die Räume, die beim Start gereinigt werden sollen, in der gewünschten Reihenfolge. Nicht gewählte Räume werden übersprungen. Leer lassen, um alle Räume in der Reihenfolge des Saugers zu reinigen. Du kannst das später unter Konfigurieren ändern.",
+        "data": {
+          "start_rooms": "Räume"
+        }
       }
     },
     "error": {
@@ -36,11 +43,14 @@
     "step": {
       "init": {
         "title": "Startreihenfolge",
-        "description": "Optional. Wähle die Bereiche, die beim Start gereinigt werden, und sortiere sie in die gewünschte Reihenfolge. Leer lassen, um alle Räume in der Reihenfolge des Saugers zu reinigen. Es zählen nur Bereiche, denen im Dialog „Bereiche reinigen“ des Saugers Räume zugewiesen sind.",
+        "description": "Optional. Wähle die Räume, die beim Start gereinigt werden sollen, in der gewünschten Reihenfolge. Nicht gewählte Räume werden übersprungen. Leer lassen, um alle Räume in der Reihenfolge des Saugers zu reinigen.",
         "data": {
-          "start_areas": "Bereiche"
+          "start_rooms": "Räume"
         }
       }
+    },
+    "abort": {
+      "no_rooms": "Der Staubsauger meldet gerade keine Räume."
     }
   }
 }

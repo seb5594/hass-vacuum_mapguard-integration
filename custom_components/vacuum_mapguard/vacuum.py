@@ -4,7 +4,6 @@ import logging
 from typing import Any
 
 from homeassistant.components.vacuum import (
-    DATA_COMPONENT,
     Segment,
     StateVacuumEntity,
     VacuumActivity,
@@ -13,13 +12,12 @@ from homeassistant.components.vacuum import (
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import ATTR_ENTITY_ID, ATTR_SUPPORTED_FEATURES, STATE_UNAVAILABLE
 from homeassistant.core import Event, EventStateChangedData, HomeAssistant, State, callback
-from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.event import async_track_state_change_event
 
-from .const import CONF_START_AREAS, DOMAIN
-from .entity_swap import VACUUM_DOMAIN, get_source
+from .const import CONF_START_ROOMS
+from .entity_swap import VACUUM_DOMAIN, get_source, get_vacuum_entity
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -141,8 +139,7 @@ class MapGuardVacuum(StateVacuumEntity):
     async def async_start(self) -> None:
         """Clean room by room, unless this is a resume."""
         if self._attr_activity in _IDLE_ACTIVITIES:
-            segment_ids = self._segment_ids_of_start_areas() or await self._all_segment_ids()
-            if segment_ids:
+            if segment_ids := await self._async_start_segment_ids():
                 await self.async_clean_segments(segment_ids)
                 return
             _LOGGER.warning(
@@ -151,19 +148,14 @@ class MapGuardVacuum(StateVacuumEntity):
             )
         await self._forward("start")
 
-    def _segment_ids_of_start_areas(self) -> list[str]:
-        """Rooms of the areas chosen in the options, in the chosen order.
-
-        Uses the room-to-area assignment of Home Assistant's "Clean areas" dialog.
-        """
-        area_mapping = self.registry_entry.options.get(VACUUM_DOMAIN, {}).get("area_mapping", {})
-        segment_ids: dict[str, None] = {}  # A dict keeps the order and drops duplicates.
-        for area_id in self._entry.options.get(CONF_START_AREAS, []):
-            segment_ids.update(dict.fromkeys(area_mapping.get(area_id, [])))
-        return list(segment_ids)
-
-    async def _all_segment_ids(self) -> list[str]:
+    async def _async_start_segment_ids(self) -> list[str]:
+        """The rooms chosen in the options, in that order, or else all rooms."""
         segments = await self.async_get_segments()
+        known = {segment.id for segment in segments}
+        if chosen := [
+            room for room in self._entry.options.get(CONF_START_ROOMS, []) if room in known
+        ]:
+            return chosen
         # Rooms of several maps (floors) can't be told apart from here, and
         # without rooms there's no saved map yet that needs protecting.
         if len({segment.group for segment in segments}) != 1:
@@ -173,18 +165,10 @@ class MapGuardVacuum(StateVacuumEntity):
     # Home Assistant's own "Clean areas" dialog and `vacuum.clean_area` run on these two.
     # The rooms reach the original in the order they were picked.
 
-    def _source_entity(self) -> StateVacuumEntity:
-        entity = self.hass.data[DATA_COMPONENT].get_entity(self._source_entity_id)
-        if entity is None:
-            raise HomeAssistantError(
-                translation_domain=DOMAIN,
-                translation_key="source_unavailable",
-                translation_placeholders={"entity_id": self._source_entity_id},
-            )
-        return entity
-
     async def async_get_segments(self) -> list[Segment]:
-        return await self._source_entity().async_get_segments()
+        return await get_vacuum_entity(self.hass, self._source_entity_id).async_get_segments()
 
     async def async_clean_segments(self, segment_ids: list[str], **kwargs: Any) -> None:
-        await self._source_entity().async_clean_segments(segment_ids, **kwargs)
+        await get_vacuum_entity(self.hass, self._source_entity_id).async_clean_segments(
+            segment_ids, **kwargs
+        )

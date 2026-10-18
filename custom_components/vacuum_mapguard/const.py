@@ -8,5 +8,5 @@ CONF_SOURCE_ID = "source_id"
 # The entity_id the proxy takes over (for example "vacuum.robot").
 CONF_ORIGINAL_ENTITY_ID = "original_entity_id"
 
-# Option: the areas `vacuum.start` cleans, in this order. Empty means all rooms.
-CONF_START_AREAS = "start_areas"
+# Option: IDs of the rooms `vacuum.start` cleans, in this order. Empty means all rooms.
+CONF_START_ROOMS = "start_rooms"
