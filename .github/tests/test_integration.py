@@ -18,6 +18,11 @@ class IntegrationLayout(unittest.TestCase):
         english = json.loads((COMPONENT / "translations/en.json").read_text())
         self.assertEqual(strings, english)
 
+    def test_integration_is_listed_with_the_regular_integrations(self):
+        # "helper" would hide it from Integrations and bury its options in the entity dialog.
+        manifest = json.loads((COMPONENT / "manifest.json").read_text())
+        self.assertEqual(manifest["integration_type"], "service")
+
     def test_german_translation_has_the_same_keys(self):
         def keys(tree, prefix=""):
             return {f"{prefix}/{k}" for k, v in tree.items()} | {

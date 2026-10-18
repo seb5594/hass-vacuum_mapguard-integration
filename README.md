@@ -48,7 +48,7 @@ If the vacuum reports no rooms yet (a new robot that has not mapped anything), o
 maps (a multi-floor setup), Vacuum MapGuard cannot plan a room-by-room run. It logs a warning and
 uses the normal start.
 
-Removing the integration from **Devices & services** undoes all of this and gives the original
+Deleting the Vacuum MapGuard entry under **Devices & services** undoes all of this and gives the original
 its entity ID back.
 
 ## Choosing the room order
@@ -71,7 +71,7 @@ data:
     - bedroom
 ```
 
-**For `vacuum.start`:** open the integration under **Settings > Devices & services**, press
+**For `vacuum.start`:** open **Settings > Devices & services > Vacuum MapGuard**, press
 **Configure** and choose the areas Start should clean, dragged into the order you want. It is
 optional. Left empty, Start cleans all rooms in the order the vacuum reports them. Areas without
 assigned rooms are skipped, and if none of the chosen areas has rooms, Start cleans all rooms.
