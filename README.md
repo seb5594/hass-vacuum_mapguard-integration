@@ -15,6 +15,7 @@
   <a href="https://github.com/seb5594/hass-vacuum_mapguard-integration/releases/tag/v1.1.1"><img src="https://img.shields.io/static/v1?label=version&amp;message=1.1.1&amp;color=1877A5&amp;style=for-the-badge" alt="version" height="28"></a>
   <a href="https://github.com/seb5594/hass-vacuum_mapguard-integration/releases"><img src="https://img.shields.io/github/downloads/seb5594/hass-vacuum_mapguard-integration/v1.1.1/total?label=downloads&amp;color=1877A5&amp;style=for-the-badge" alt="downloads" height="28"></a><br>
   <a href="https://github.com/seb5594/hass-vacuum_mapguard-integration/issues"><img src="https://img.shields.io/github/issues/seb5594/hass-vacuum_mapguard-integration?label=issues&amp;style=flat" alt="issues" height="20"></a>
+  <img src="https://img.shields.io/static/v1?label=tests&amp;message=5%20passed&amp;color=2F855A&amp;style=flat" alt="tests" height="20">
   <a href="https://github.com/seb5594/hass-vacuum_mapguard-integration/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/seb5594/hass-vacuum_mapguard-integration/ci.yml?branch=main&amp;label=checks&amp;style=flat" alt="checks" height="20"></a>
   <a href="https://github.com/seb5594/hass-vacuum_mapguard-integration#license"><img src="https://img.shields.io/github/license/seb5594/hass-vacuum_mapguard-integration?label=license&amp;style=flat" alt="license" height="20"></a>
 </p>
