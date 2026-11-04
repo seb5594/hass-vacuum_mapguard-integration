@@ -16,7 +16,7 @@ from homeassistant.components.vacuum import (  # noqa: E402
     VacuumEntityFeature,
 )
 from homeassistant.config_entries import ConfigEntry, ConfigFlow  # noqa: E402
-from homeassistant.const import Platform  # noqa: E402
+from homeassistant.const import MAJOR_VERSION, MINOR_VERSION, Platform  # noqa: E402
 from homeassistant.core import HomeAssistant  # noqa: E402
 from homeassistant.helpers import entity_registry as er  # noqa: E402
 from homeassistant.helpers.device_registry import DeviceInfo  # noqa: E402
@@ -87,9 +87,11 @@ async def _set_up_source(hass: HomeAssistant, segments=THREE_ROOMS) -> FakeVacuu
     """Create `vacuum.robot` the way any vacuum integration would."""
     vacuum = FakeVacuum(list(segments))
 
-    async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool | None:
         await hass.config_entries.async_forward_entry_setups(entry, [Platform.VACUUM])
-        return True
+        if (MAJOR_VERSION, MINOR_VERSION) < (2026, 11):
+            return True
+        return None
 
     async def async_setup_platform_entry(hass, entry, async_add_entities) -> None:
         async_add_entities([vacuum])
