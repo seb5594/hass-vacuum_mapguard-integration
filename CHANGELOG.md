@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.2
+
+- Prepare a release validated by the shared HASS Marketplace workflow, including HACS and Hassfest without ignored checks.
+- Keep the generated Marketplace submission files available as a workflow artifact.
+
 ## 1.1.1
 
 - The room list shows the room names instead of their IDs and no longer has an edit button. Rooms can still be dragged into order and removed.
