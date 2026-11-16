@@ -1,0 +1,56 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Vacuum MapGuard",
+        "description": "Pick the vacuum to protect. It gets hidden and renamed (for example vacuum.robot becomes vacuum.robot_roborock), and Vacuum MapGuard takes over its entity ID. Dashboards, automations and voice assistants keep working. Removing the entry undoes this.",
+        "data": {
+          "entity_id": "Vacuum"
+        },
+        "data_description": {
+          "entity_id": "Only vacuums that support cleaning by area are listed."
+        }
+      },
+      "rooms": {
+        "title": "Start order",
+        "description": "Optional. This is the order Start cleans your rooms in, as the vacuum would clean them without a custom order. Drag a room to move it, remove one to skip it and pick it from the list again to bring it back. Leave the list as it is to clean all rooms. You can change this later under Configure.",
+        "data": {
+          "start_rooms": "Rooms"
+        }
+      }
+    },
+    "error": {
+      "no_unique_id": "This vacuum has no unique ID, so Home Assistant can't rename it.",
+      "already_wrapped": "This is already a Vacuum MapGuard vacuum.",
+      "no_clean_area": "This vacuum doesn't support cleaning by area."
+    },
+    "abort": {
+      "already_configured": "This vacuum is already protected."
+    }
+  },
+  "exceptions": {
+    "source_missing": {
+      "message": "The protected vacuum was removed from the entity registry. Delete this entry and add it again."
+    },
+    "original_id_busy": {
+      "message": "{entity_id} is still in use, trying again shortly."
+    },
+    "source_unavailable": {
+      "message": "The protected vacuum {entity_id} is not available."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Start order",
+        "description": "Optional. This is the order Start cleans your rooms in. Drag a room to move it, remove one to skip it and pick it from the list again to bring it back. Leave the list as it is to clean all rooms.",
+        "data": {
+          "start_rooms": "Rooms"
+        }
+      }
+    },
+    "abort": {
+      "no_rooms": "The vacuum doesn't report any rooms right now."
+    }
+  }
+}

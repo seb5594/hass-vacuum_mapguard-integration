@@ -1,0 +1,13 @@
+{
+  "domain": "vacuum_mapguard",
+  "name": "Vacuum MapGuard",
+  "categories": ["appliances_cleaning.cleaning"],
+  "codeowners": ["@seb5594"],
+  "config_flow": true,
+  "documentation": "https://github.com/seb5594/hass-vacuum_mapguard-integration",
+  "integration_type": "service",
+  "iot_class": "calculated",
+  "issue_tracker": "https://github.com/seb5594/hass-vacuum_mapguard-integration/issues",
+  "requirements": [],
+  "version": "1.1.3"
+}
