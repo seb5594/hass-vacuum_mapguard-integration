@@ -1,6 +1,7 @@
 {
   "domain": "vacuum_mapguard",
   "name": "Vacuum MapGuard",
+  "categories": ["appliances_cleaning.cleaning"],
   "codeowners": ["@seb5594"],
   "config_flow": true,
   "documentation": "https://github.com/seb5594/hass-vacuum_mapguard-integration",
