@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.3
+
+- Add the Cleaning category to the Marketplace manifest.
+
 ## 1.1.2
 
 - Prepare a release validated by the shared HASS Marketplace workflow, including HACS and Hassfest without ignored checks.
