@@ -36,10 +36,11 @@ dashboards, automations, schedules and voice assistants protect the map without 
 
 ## Installation
 
-1. Use the **HACS · Marketplace** button above to open this repository in your instance, or add it
-   as a custom repository (category *Integration*): in [HACS](https://hacs.xyz) on Home Assistant
-   2026.10 and older, in **Settings > Marketplace** on 2026.11 and newer. Install
-   **Vacuum MapGuard** and restart Home Assistant.
+1. Search for **Vacuum MapGuard** in HACS (Home Assistant 2026.10 and older) or in
+   **Settings → Marketplace** (2026.11 and newer), or use the *HACS · Marketplace* button above.
+   Download it and restart Home Assistant.
+   If the search does not find it, add `https://github.com/seb5594/hass-vacuum_mapguard-integration`
+   as a custom repository (category *Integration*) in the same place first.
    Without HACS or the Marketplace, copy `custom_components/vacuum_mapguard` into your `custom_components` folder.
 2. Go to **Settings > Devices & services > Add integration > Vacuum MapGuard**.
 
