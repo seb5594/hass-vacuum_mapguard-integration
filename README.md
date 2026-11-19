@@ -7,7 +7,7 @@
 
 <p align="center">
   <a href="https://my.home-assistant.io/redirect/hacs_repository/?owner=seb5594&amp;repository=hass-vacuum_mapguard-integration&amp;category=integration"><img src="https://img.shields.io/static/v1?label=HACS%20%C2%B7%20Marketplace&amp;message=Add%20integration&amp;color=41BDF5&amp;logo=homeassistantcommunitystore&amp;logoColor=white&amp;style=for-the-badge" alt="HACS · Marketplace" height="28"></a>
-  <a href="https://github.com/seb5594/hass-vacuum_mapguard-integration/actions/workflows/compat.yml"><img src="https://img.shields.io/static/v1?label=home%20assistant&amp;message=%E2%89%A5%202026.9.0&amp;color=1877A5&amp;style=for-the-badge" alt="home assistant" height="28"></a><br>
+  <a href="https://github.com/seb5594/hass-vacuum_mapguard-integration/actions/workflows/compat.yml"><img src="https://img.shields.io/static/v1?label=home%20assistant&amp;message=%E2%89%A5%202026.3.0&amp;color=1877A5&amp;style=for-the-badge" alt="home assistant" height="28"></a><br>
   <a href="https://github.com/seb5594/hass-vacuum_mapguard-integration/releases/tag/v1.1.3"><img src="https://img.shields.io/static/v1?label=integration%20version&amp;message=1.1.3&amp;color=1877A5&amp;style=for-the-badge" alt="integration version" height="28"></a>
   <a href="https://github.com/seb5594/hass-vacuum_mapguard-integration/releases"><img src="https://img.shields.io/github/downloads/seb5594/hass-vacuum_mapguard-integration/v1.1.3/total?label=downloads&amp;color=1877A5&amp;style=for-the-badge" alt="downloads" height="28"></a><br>
   <a href="https://github.com/seb5594/hass-vacuum_mapguard-integration/stargazers"><img src="https://img.shields.io/github/stars/seb5594/hass-vacuum_mapguard-integration?label=stars&amp;style=flat" alt="stars" height="20"></a>
