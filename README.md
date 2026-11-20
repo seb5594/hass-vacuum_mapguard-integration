@@ -1,8 +1,6 @@
 <!-- header:begin (generated from project metadata) -->
 <h1 align="center">
   <img src="https://raw.githubusercontent.com/seb5594/hass-vacuum_mapguard-integration/main/custom_components/vacuum_mapguard/brand/logo@2x.png" alt="Vacuum MapGuard" width="246" height="160">
-  <br>
-  Vacuum MapGuard
 </h1>
 
 <p align="center">
