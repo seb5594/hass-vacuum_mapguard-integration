@@ -22,8 +22,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
-    """Stop the proxy. The swap stays in place, a restart must not undo it."""
-    return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
+    """Stop the proxy. A reload or restart keeps the swap, disabling the entry undoes it."""
+    unloaded = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
+    if unloaded and entry.disabled_by:
+        # Without the proxy, dashboards and automations would point at nothing.
+        await async_restore_source(hass, entry)
+    return unloaded
 
 
 async def async_remove_entry(hass: HomeAssistant, entry: ConfigEntry) -> None:

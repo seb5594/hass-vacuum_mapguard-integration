@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.4
+
+- Disabling the integration entry now gives the original vacuum its entity ID back, so dashboards and automations keep working. Enabling the entry swaps them again. Reloads and restarts keep the swap.
+
 ## 1.1.3
 
 - Add the Cleaning category to the Marketplace manifest.

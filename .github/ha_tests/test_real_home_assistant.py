@@ -15,7 +15,7 @@ from homeassistant.components.vacuum import (  # noqa: E402
     VacuumActivity,
     VacuumEntityFeature,
 )
-from homeassistant.config_entries import ConfigEntry, ConfigFlow  # noqa: E402
+from homeassistant.config_entries import ConfigEntry, ConfigEntryDisabler, ConfigFlow  # noqa: E402
 from homeassistant.const import MAJOR_VERSION, MINOR_VERSION, Platform  # noqa: E402
 from homeassistant.core import HomeAssistant  # noqa: E402
 from homeassistant.helpers import entity_registry as er  # noqa: E402
@@ -346,6 +346,27 @@ async def test_other_actions_are_passed_through(hass):
     await _call(hass, "pause")
 
     assert source.calls == [("pause",)]
+
+
+async def test_disabling_the_entry_gives_the_original_its_id_back_until_it_is_enabled(hass):
+    await _set_up_source(hass)
+    entry = await _wrap(hass)
+    registry = er.async_get(hass)
+
+    await hass.config_entries.async_set_disabled_by(entry.entry_id, ConfigEntryDisabler.USER)
+    await hass.async_block_till_done()
+
+    restored = registry.async_get("vacuum.robot")
+    assert restored.platform == SOURCE_DOMAIN and restored.hidden_by is None
+
+    await hass.config_entries.async_set_disabled_by(entry.entry_id, None)
+    await hass.async_block_till_done()
+
+    assert registry.async_get("vacuum.robot").platform == DOMAIN
+    assert (
+        registry.async_get("vacuum.robot_test_source").hidden_by
+        is er.RegistryEntryHider.INTEGRATION
+    )
 
 
 async def test_removing_the_entry_gives_the_original_its_id_back(hass):
